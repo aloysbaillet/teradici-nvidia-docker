@@ -1,12 +1,19 @@
-ARG CUDA_VERSION=10.1
-FROM nvidia/cudagl:${CUDA_VERSION}-runtime-ubuntu18.04
+ARG UPSTREAM_IMAGE="nvidia/cudagl:10.1-runtime-ubuntu18.04"
+FROM ${UPSTREAM_IMAGE}
 
 ARG USERNAME
 ARG PUID
 ARG PGID
 
+RUN apt-get update && \
+    apt-get install -y wget \
+        lsb-release \
+        sudo \
+        libgnome-keyring0 \
+        libwebkitgtk-1.0 \
+        iptables \
+        net-tools
 # Use the following two lines to install the Teradici repository package
-RUN apt-get update && apt-get install -y wget
 RUN wget -O teradici-repo-latest.deb https://downloads.teradici.com/ubuntu/teradici-repo-bionic-latest.deb
 RUN apt install ./teradici-repo-latest.deb
 
@@ -30,15 +37,11 @@ RUN mkdir -p /etc/sudoers.d/ && \
     chmod 0440 /etc/sudoers.d/${USERNAME} && \
     chown ${PUID}:${PGID} -R /home/${USERNAME}
 
-ADD ps-pulse-linux-9.1r4.0-b143-ubuntu-debian-64-bit-installer.deb /tmp/
-RUN apt-get install -y \
-        lsb-release \
-        sudo \
-        libgnome-keyring0 \
-        libwebkitgtk-1.0 \
-        iptables \
-        net-tools && \
-    dpkg -i /tmp/ps-pulse-linux-9.1r4.0-b143-ubuntu-debian-64-bit-installer.deb
+ARG ENABLE_PULSESECURE=0
+ENV ENABLE_PULSESECURE=${ENABLE_PULSESECURE}
+
+ADD LICENSE ps-pulse-linux-*.deb /tmp/
+RUN bash -c "if [[ $ENABLE_PULSESECURE == 1 ]]; then dpkg -i /tmp/ps-pulse-*.deb; fi;"
 
 # Set some environment variables for the current user
 USER ${USERNAME}

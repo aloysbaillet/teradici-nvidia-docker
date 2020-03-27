@@ -1,5 +1,5 @@
-# teradici-nvidia-docker
-Teradici + PulseSecure client on linux with optional nvidia-docker on nvidia GPUs. Adapted from http://www.teradici.com/web-help/pcoip_client/linux/3.8.1/reference/creating_a_docker_container/
+# Teradici Docker
+Teradici + PulseSecure client on linux with optional nvidia-docker on nvidia GPUs and optional PulseSecure VPN. Adapted from http://www.teradici.com/web-help/pcoip_client/linux/3.8.1/reference/creating_a_docker_container/
 
 ## Getting Started
 Install `docker` on your linux box. If you have a NVidia card please follow all the instructions there to install NVidia Docker: https://github.com/NVIDIA/nvidia-docker

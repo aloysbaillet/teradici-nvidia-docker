@@ -1,2 +1,4 @@
-.logs
-.config
+.logs/
+.config/
+.pulse_secure/
+*.deb

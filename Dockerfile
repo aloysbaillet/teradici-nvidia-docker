@@ -30,6 +30,16 @@ RUN mkdir -p /etc/sudoers.d/ && \
     chmod 0440 /etc/sudoers.d/${USERNAME} && \
     chown ${PUID}:${PGID} -R /home/${USERNAME}
 
+ADD ps-pulse-linux-9.1r4.0-b143-ubuntu-debian-64-bit-installer.deb /tmp/
+RUN apt-get install -y \
+        lsb-release \
+        sudo \
+        libgnome-keyring0 \
+        libwebkitgtk-1.0 \
+        iptables \
+        net-tools && \
+    dpkg -i /tmp/ps-pulse-linux-9.1r4.0-b143-ubuntu-debian-64-bit-installer.deb
+
 # Set some environment variables for the current user
 USER ${USERNAME}
 ENV HOME /home/${USERNAME}
@@ -37,4 +47,5 @@ ENV HOME /home/${USERNAME}
 # Set the path for QT to find the keyboard context
 ENV QT_XKB_CONFIG_ROOT /user/share/X11/xkb
 
-ENTRYPOINT exec pcoip-client
+ADD entrypoint.sh /usr/bin/
+ENTRYPOINT exec /usr/bin/entrypoint.sh
